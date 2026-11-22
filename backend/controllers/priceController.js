@@ -13,10 +13,13 @@ async function getProductPrices(req, res, next) {
     const retailerPrices = await db.all(`
       SELECT r.id as retailer_id, r.name as retailer_name, r.website, r.badge_color, ph.price, ph.recorded_at
       FROM retailers r
-      JOIN price_history ph ON ph.retailer_id = r.id AND ph.product_id = ?
-      WHERE ph.recorded_at = (SELECT MAX(recorded_at) FROM price_history WHERE product_id = ?)
-      ORDER BY ph.price ASC
-    `, [productId, productId]);
+      JOIN price_history ph ON ph.id = (
+        SELECT h.id FROM price_history h
+        WHERE h.product_id = ? AND h.retailer_id = r.id
+        ORDER BY h.recorded_at DESC, h.id DESC LIMIT 1
+      )
+      ORDER BY ph.price ASC, r.id ASC
+    `, [productId]);
 
     res.json({
       success: true,
@@ -102,10 +105,13 @@ async function getPriceSummary(req, res, next) {
     const retailers = await db.all(`
       SELECT r.name, r.badge_color, r.website, ph.price as latest_price
       FROM retailers r
-      JOIN price_history ph ON ph.retailer_id = r.id AND ph.product_id = ?
-      WHERE ph.recorded_at = (SELECT MAX(recorded_at) FROM price_history WHERE product_id = ?)
-      ORDER BY ph.price ASC
-    `, [productId, productId]);
+      JOIN price_history ph ON ph.id = (
+        SELECT h.id FROM price_history h
+        WHERE h.product_id = ? AND h.retailer_id = r.id
+        ORDER BY h.recorded_at DESC, h.id DESC LIMIT 1
+      )
+      ORDER BY ph.price ASC, r.id ASC
+    `, [productId]);
 
     res.json({
       success: true,

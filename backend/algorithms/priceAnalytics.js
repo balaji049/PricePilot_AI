@@ -5,11 +5,24 @@
 
 function calculateMovingAverage(prices, days) {
   if (!prices || prices.length === 0) return 0;
-  // Sort descending by date or assume sorted ascending
+  // Undated input represents one price per consecutive day.
   const slice = prices.slice(-days);
   if (slice.length === 0) return 0;
   const sum = slice.reduce((acc, curr) => acc + (typeof curr === 'number' ? curr : curr.price), 0);
   return Math.round(sum / slice.length);
+}
+
+// Each observed day has equal weight, even when retailer coverage varies.
+function dailyPrices(records) {
+  const totals = new Map();
+  for (const { recorded_at, price } of records) {
+    const day = Math.floor(Date.parse(recorded_at) / 86400000);
+    const entry = totals.get(day) || { sum: 0, count: 0 };
+    entry.sum += price;
+    entry.count += 1;
+    totals.set(day, entry);
+  }
+  return Array.from(totals, ([day, { sum, count }]) => ({ day, price: sum / count }));
 }
 
 function calculateHistoricalMetrics(priceRecords, currentPrice) {
@@ -34,8 +47,13 @@ function calculateHistoricalMetrics(priceRecords, currentPrice) {
   const highestPrice = Math.max(...rawPrices);
   const effectiveCurrentPrice = currentPrice || rawPrices[rawPrices.length - 1];
 
-  const ma30 = calculateMovingAverage(rawPrices, 30);
-  const ma90 = calculateMovingAverage(rawPrices, 90);
+  const daily = dailyPrices(sorted);
+  const lastDay = daily[daily.length - 1].day;
+  const windowAverage = days => calculateMovingAverage(
+    daily.filter(entry => entry.day > lastDay - days), days
+  );
+  const ma30 = windowAverage(30);
+  const ma90 = windowAverage(90);
 
   // Deviation (%) = ((Current Price - Average Price) / Average Price) * 100
   const deviation90 = ma90 > 0 ? Number((((effectiveCurrentPrice - ma90) / ma90) * 100).toFixed(2)) : 0;
