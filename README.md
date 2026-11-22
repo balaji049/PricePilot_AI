@@ -1,139 +1,139 @@
-# SpecSense – BestBuy Timing Hack
+# SpecSense
 
-> **Cross-Retailer Price Intelligence & Technical Specification Benchmarking Platform**  
-> Built with React, Vite, Tailwind CSS, Node.js, Express, and persistent SQLite.
+![React 18](https://img.shields.io/badge/React-18-087EA4?logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Express-3C873A?logo=nodedotjs&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-sql.js-003B57?logo=sqlite&logoColor=white)
 
----
+SpecSense compares electronics across retailers and helps shoppers decide whether to buy now or set a price alert. The demo generates **4,320 price observations**: 16 products × 3 retailers × 90 days. Its catalog, price histories and flash sales are simulated, so you can explore the full workflow locally without retailer accounts or API keys.
 
-## 🏆 Live Hackathon Demonstration Walkthrough
+## 🚀 Features
 
-SpecSense is pre-configured with a live demonstration scenario comparing **OnePlus 12** and **Google Pixel 8**.
+- **Compare two or three products.** View specifications side by side, highlight differences and export the comparison as a PDF.
+- **Explore price history.** Chart retailer quotes over 30, 60 or 90 days and see how the current price compares with recent averages.
+- **Understand a recommendation.** Inspect the price deviation and historical low behind a buy, wait or fair-price recommendation. A separate value score weighs specifications by product category.
+- **Try a price alert.** Set a target, simulate a price drop and see qualifying alerts change from active to triggered.
 
-### Demo Execution Script (3 Minutes):
+## 🛠 Tech Stack
 
-1. **Launch the Application**:
-   ```bash
-   node backend/server.js
-   ```
-   Open **`http://localhost:5000`** in any browser.
+| Layer | Technologies | Role |
+| --- | --- | --- |
+| Interface | React 18, Vite, Tailwind CSS, Recharts | Product comparison, interactive price charts and alerts |
+| API | Node.js, Express, Zod | REST endpoints and alert input validation |
+| Storage | SQLite via sql.js | Relational catalog, price history, alerts and sale events |
+| Reporting | html2canvas, jsPDF | Exportable product comparison reports |
 
-2. **Launch the 1-Click Comparison Demo**:
-   - In the top header bar, click **`Demo: OnePlus 12 vs Pixel 8`** (or the blue banner on the homepage).
-   - This opens the side-by-side comparison of **OnePlus 12 (256GB)** and **Google Pixel 8 (128GB)**.
+## 📂 Project Structure
 
-3. **Demonstrate Specification & Timing Intelligence**:
-   - **Specification Difference Highlighting**: Click the **"Differences Only"** switch to dim identical specs and highlight variances.
-   - **Performance Contrast**: Note the benchmark score (OnePlus 12: `2,110,000` with Snapdragon 8 Gen 3 vs. Pixel 8: `1,180,000` with Tensor G3).
-   - **Value-for-Money Index**: OnePlus 12 scores **84/100 (Exceptional Value)**; Google Pixel 8 scores **66/100 (Moderate Value)**.
-   - **Recommendation Contrast**:
-     - **OnePlus 12**: Classified as **`GREAT DEAL – BUY NOW`** (Current price ₹64,999 is **6.3% below its 90-day average** of ₹69,349 and within 2.4% of its 90-day low).
-     - **Google Pixel 8**: Classified as **`FAIR PRICE`** (Current price ₹61,999 is hovering **-0.9%** within its normal baseline).
+```text
+PricePilot_AI/
+├── backend/
+│   ├── algorithms/       # Price metrics, timing recommendations and value scores
+│   ├── controllers/      # Product, comparison, price and alert handlers
+│   ├── database/         # Schema, demo seed and SQLite persistence
+│   ├── middleware/       # API error handling
+│   ├── routes/           # Express route definitions
+│   ├── test/             # Price analytics regression tests
+│   └── server.js         # API entry point and static frontend host
+├── frontend/
+│   ├── src/
+│   │   ├── components/   # Comparison table, charts, alert form and navigation
+│   │   ├── context/      # Shared alert state
+│   │   ├── pages/        # Catalog, tracker, comparisons and alerts
+│   │   ├── services/     # API client
+│   │   └── utils/        # PDF export
+│   └── vite.config.js
+└── package.json          # Commands for both applications
+```
 
-4. **Demonstrate 90-Day Interactive Financial Charts**:
-   - Navigate to **`Price Tracker`** (or click "Price Trend" under OnePlus 12).
-   - Show the 3 retailer series: **Amazon** (orange), **Flipkart** (blue), **Direct Brand Store** (green).
-   - Toggle retailer lines on/off.
-   - Switch date horizons between **30D**, **60D**, and **90D**.
-   - Hover to inspect exact daily verified prices against the **90-Day Moving Average reference line** and the **Historical Low marker**.
+## ⚡ Getting Started
 
-5. **Demonstrate Live Price Drop Alert Triggering**:
-   - Click **`Price Alerts`** in the top navigation.
-   - Show the pre-configured **Active Alert** on **Google Pixel 8** with a target threshold of **₹58,000** (Current: ₹61,999).
-   - Click the blue button: **`Trigger Pixel 8 Flash Drop`**.
-   - **Watch Real-Time Execution**:
-     - The backend applies a 10% flash price reduction to ₹55,799.
-     - The alert condition `current_price <= target_price` evaluates to true.
-     - Alert status updates from `ACTIVE` to `TRIGGERED`.
-     - An instant **notification banner** toasts onto the screen.
-     - The top navigation **bell notification counter** updates in real time.
+### Prerequisites
 
-6. **Demonstrate PDF Export**:
-   - Return to **`Compare Specs`** and click **`Export PDF Report`** to generate a formatted printable report.
+Install Git, Node.js 22 or 24, and npm. The backend writes its SQLite file to the repository, so use a writable checkout.
 
----
-
-## 1. Project Overview
-
-**SpecSense – BestBuy Timing Hack** helps consumers make smarter electronics purchasing decisions by eliminating guesswork and countering retailer surge pricing:
-- Comparing technical specifications across 14 hardware parameters.
-- Tracking 90 days of empirical daily price points across Amazon, Flipkart, and Direct Brand Stores.
-- Calculating 30-day and 90-day moving averages (MA).
-- Formulating rule-based purchase recommendations (**GREAT DEAL – BUY NOW**, **FAIR PRICE**, **WAIT – LIKELY TO DROP**).
-- Monitoring target-price alerts with live simulated trigger testing.
-- Scoring devices with a category-weighted Value-for-Money (VFM) model (0–100).
-
----
-
-## 2. Technology Stack
-
-### Frontend
-- **Framework**: React 18 with Vite
-- **Styling**: Tailwind CSS ("Clean Commerce" visual language: `#F8FAFC` background, `#FFFFFF` cards, `#0F172A` text, `#1D4ED8` primary accent, `#15803D` deal green, `#B45309` warning amber)
-- **Routing**: React Router v7
-- **Charts**: Recharts (multi-series line charts, custom tooltips, moving average reference lines)
-- **Icons**: Lucide React
-- **Exporting**: html2canvas + jsPDF (Formatted PDF comparison export)
-
-### Backend
-- **Runtime**: Node.js (v20+ / v26)
-- **Web Framework**: Express.js REST APIs
-- **Database**: SQLite with `sql.js` (WebAssembly-backed persistent on-disk database)
-- **Validation**: Zod schema validation
-- **HTTP Client**: Axios
-
----
-
-## 3. Mathematical Formulas & Algorithmic Design
-
-### A. Moving Average Calculation
-$$\text{MA}(n) = \frac{1}{n} \sum_{i=1}^{n} \text{Price}_i$$
-Calculated for $n = 30$ days and $n = 90$ days across multi-retailer daily records.
-
-### B. Price Deviation Percentage
-$$\text{Deviation}_{90} (\%) = \left(\frac{\text{Current Price} - \text{MA}_{90}}{\text{MA}_{90}}\right) \times 100$$
-
-### C. Rule-Based Purchase Timing Algorithm
-1. **GREAT DEAL – BUY NOW**:
-   $$\text{Deviation}_{90} \le -5.0\% \quad \text{AND} \quad \frac{\text{Current Price} - \text{Low}_{90}}{\text{Low}_{90}} \le 10.0\%$$
-2. **WAIT – LIKELY TO DROP**:
-   $$\text{Deviation}_{90} > +5.0\%$$
-3. **FAIR PRICE**:
-   $$-5.0\% < \text{Deviation}_{90} \le +5.0\%$$
-
-### D. Value-For-Money (VFM) Index (0–100)
-Normalizes hardware parameters against category median price points:
-$$\text{Score} = w_{\text{cpu}} S_{\text{cpu}} + w_{\text{disp}} S_{\text{disp}} + w_{\text{cam}} S_{\text{cam}} + w_{\text{batt}} S_{\text{batt}} + w_{\text{eff}} S_{\text{eff}}$$
-- **Smartphones**: CPU 25%, Display 20%, Camera 20%, Battery 15%, Price Efficiency 20%
-- **Laptops**: CPU 35%, Display 20%, Price Efficiency 25%, Battery 15%, Webcam 5%
-- **Headphones**: Audio/ANC 20%, Battery 25%, Chip 20%, Price Efficiency 30%
-- **Smartwatches**: Display 25%, Sensors 15%, Battery 20%, Chip 20%, Price Efficiency 20%
-
----
-
-## 4. Database Schema
-
-- **`products`**: 16 devices across Smartphones, Laptops, Headphones, Smartwatches with all 14 specification parameters.
-- **`retailers`**: Amazon, Flipkart, Direct Brand Store.
-- **`price_history`**: 4,320 records (16 products x 3 retailers x 90 daily records).
-- **`price_alerts`**: Persistent target price alerts with `ACTIVE` and `TRIGGERED` status.
-- **`sales_events`**: Upcoming scheduled and historically recurring sales calendar events.
-
----
-
-## 5. Quick Start Instructions
+### Installation
 
 ```bash
-# 1. Install Dependencies
-npm install --prefix backend
-npm install --prefix frontend
-
-# 2. Seed SQLite Database
-node backend/database/seed.js
-
-# 3. Build Production Frontend
-npm run build --prefix frontend
-
-# 4. Start Unified Server
-node backend/server.js
+git clone https://github.com/balaji049/PricePilot_AI.git
+cd PricePilot_AI
+npm ci --prefix backend
+npm ci --prefix frontend
+npm run seed
 ```
-Open **`http://localhost:5000`** in your browser.
+
+The seed creates the demo database at `backend/database/specsense.sqlite`. **Reseeding resets the database**, including saved alerts. Stop the server before running the seed again.
+
+### Running the Project
+
+To serve the UI and API from one process, run these commands from the repository root:
+
+```bash
+npm run build
+npm start
+```
+
+Open [the local app](http://localhost:5000). To check the backend separately, open [the health endpoint](http://localhost:5000/api/health).
+
+For frontend development, run `npm run dev:backend` in one terminal and `npm run dev:frontend` in another. Open [the Vite dev server](http://localhost:5173).
+
+## 🔧 Environment Variables
+
+The default settings work on localhost. To have the browser request the API from the same origin as the UI, create `frontend/.env.local`:
+
+```dotenv
+VITE_API_URL=/api
+```
+
+Vite proxies `/api` to port 5000 during development. Express serves that path directly in the combined build. Restart Vite or rebuild the frontend after changing this setting.
+
+The backend reads `PORT` from the process environment. For an alternative to exporting it in your shell, create a `.env` file at the repository root:
+
+```dotenv
+PORT=5001
+```
+
+Start the backend with `node --env-file=.env backend/server.js` to load that file explicitly. If you change the backend port during split-server development, set `VITE_API_URL` to the full API address, such as `http://localhost:5001/api`.
+
+## 📸 Screenshots
+
+| View | Screenshot placeholder |
+| --- | --- |
+| Product comparison | *OnePlus 12 and Pixel 8 side by side with specification differences highlighted.* |
+| Price tracker | *Three retailer price histories for one product over 90 days.* |
+
+## 🎯 Usage
+
+1. Open **Compare Specs**, select the OnePlus 12 and Google Pixel 8, and turn on **Differences Only**. Choose **Export PDF Report** to save the comparison.
+2. Open **Price Tracker**, select a product and switch between time windows. Compare the retailer lines with the historical average and low.
+3. Open **Price Alerts** and try the flash-drop demo. The simulator reduces the selected product’s price by 10%, checks active targets and displays the result in the app.
+
+To inspect the same data through the API, run:
+
+```bash
+curl 'http://localhost:5000/api/products'
+curl 'http://localhost:5000/api/prices/1/history?days=30'
+curl 'http://localhost:5000/api/compare?ids=1,2'
+```
+
+## 🏗 Architecture Overview
+
+The seed script loads products and retailers, then writes one price per product, retailer and day. Each observation links to both a product and a retailer. An index on product and date supports history queries. [Database schema](backend/database/schema.sql)
+
+The React client requests data from Express. For a retailer comparison, the API selects each retailer’s latest available quote. For a moving average, it averages the quotes on each observed day, then averages those daily values within the calendar window. A missing day contributes no value, and a day with three quotes carries the same weight as a day with one. [Price controller](backend/controllers/priceController.js) · [Price analytics](backend/algorithms/priceAnalytics.js)
+
+## 🤝 Contributing
+
+Create a branch for your change and keep the pull request focused. For a calculation change, include a small price history with the expected result. For a UI change, include a screenshot of the affected view. Run the analytics tests and build the frontend before opening the pull request:
+
+```bash
+node --test backend/test/priceAnalytics.test.js
+npm run build
+```
+
+## 📝 License
+
+The root [package manifest](package.json) declares MIT. The repository does not currently include a standalone license file.
+
+## 👨‍💻 Author
+
+**Bhairwad Balaji** · [GitHub](https://github.com/balaji049) · [LinkedIn](https://www.linkedin.com/in/balaji-bhairwad/)
